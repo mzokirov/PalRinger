@@ -1,0 +1,43 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/flash') %>
+<div id="results">
+    <div class="d-flex mb-3">
+        <a href="/admin/applicants" class="btn btn-primary">Approve Users</a>
+        <a href="/admin/users" class="btn btn-primary ms-2">Manage Users</a>
+        <a href="#" class="btn btn-outline-primary ms-2">Manage Mods</a>
+    </div>
+    <h3>Manage Moderators</h3>
+    <% if(users) { %>
+    <% if(users.length) { %>
+    <p class="border-bottom pb-2"><%=users.length%> user(s) found.</p>
+    <% for(let i = 0; i < users.length; i++) { %>
+    <div class="mb-3 d-flex flex-column">
+        <div class="entry link mb-1">
+            <a href="/profile/<%=users[i]._id%>"></a>
+            <div class="profile-img">
+                <%=users[i].firstName.slice(0, 1)%>
+            </div>
+            <div class="w-100" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p style="font-size: 1.15rem;"><%=users[i].prefName%> <%=users[i].lastName%></p>
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-muted" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <%=users[i].message ? users[i].message : "No message."%></p>
+                </div>
+            </div>
+        </div>
+        <form class="ms-auto" action="/admin/users/<%=users[i]._id%>/remove" method="POST">
+            <button class="btn btn-success">Remove Mod</button>
+        </form>
+    </div>
+    <% }} else { %>
+    <div class="text-center my-5">
+        <p class="text-muted">No users found</p>
+    </div>
+    <% }} %>
+</div>

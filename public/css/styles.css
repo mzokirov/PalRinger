@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Fredoka", sans-serif !important;
+}
+:root {
+    --light: white;
+    --dark: black;
+    --mbhs: #890F0D;
+}
+body {
+    background-color: rgb(245, 245, 245);
+}
+p, h4 {
+    margin: 0;
+}
+#header {
+    /* background: linear-gradient(180deg, rgba(99, 29, 0, 1) 0%, rgba(232, 40, 4, 1) 100%); */
+    background-color: rgb(125, 23, 0) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    color: var(--light);
+    text-align: center;
+    position: relative;
+}
+#input_box {
+    position: relative;
+    max-width: 600px;
+    background-color: white;
+    margin: auto;
+    margin-top: -3rem;
+    padding: 1rem;
+    border: 1px solid rgb(219, 218, 218);
+    border-radius: 0.5rem;
+    z-index: 1;
+    box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.25);
+}
+#mascot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 130px;
+    width: auto;
+    opacity: 0.5;
+}
+#results {
+    max-width: 700px;
+    margin: auto;
+    padding: 1rem;
+}
+#banner {
+    height: 8rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 190, 255, 1) 100%);
+    padding: 1rem;
+    display: flex;
+    justify-content: end;
+}
+.entry {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    transition: box-shadow 300ms;
+    position: relative;
+    background-color: white;
+    box-shadow: 0 0 0.25rem rgba(194, 188, 186, 0.5);
+}
+.link {
+    position: relative;
+}
+.link>a {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    border-radius: 0.5rem;
+}
+.entry:hover {
+    box-shadow: 0 0 1rem rgb(194, 188, 186);
+}
+.profile-img {
+    background-color: rgb(175, 189, 195);
+    max-width: 50px;
+    min-width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+}
+.profile-img-lg {
+    background: linear-gradient(180deg, rgba(209, 223, 230, 1) 0%, rgba(167, 180, 186, 1) 100%);
+    border: 5px solid white;
+    max-width: 7rem;
+    min-width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+.sub-card {
+    border-radius: 0.25rem;
+    background-color: rgb(245, 245, 245);
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    margin-top: 1rem;
+}
+.text-sm {
+    font-size: 0.9rem;
+}
+
+.card {
+    border-radius: 1rem;
+    border: none;
+}

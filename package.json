@@ -1,0 +1,28 @@
+{
+  "name": "palringer",
+  "version": "1.0.0",
+  "description": "A website that stores people's contact info for friends to connect.",
+  "main": "app.js",
+  "scripts": {
+    "test": "start",
+    "start": "node app.js"
+  },
+  "author": "mubinjon",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^3.2.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.0",
+    "ejs-mate": "^3.0.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "joi": "^17.6.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^6.2.5",
+    "nodemailer": "^6.7.2",
+    "nodemon": "^2.0.15",
+    "pm2": "^5.2.0"
+  }
+}

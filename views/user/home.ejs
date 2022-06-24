@@ -1,0 +1,71 @@
+<% layout('layouts/boilerplate') %>
+<div id="header">
+    <div style="z-index:1;">
+        <h1 class="">Link Up, Millennium!</h1>
+        <h5>Search the registry for your friends' contact details (case-sensitive).</h5>
+        <div class="mt-4">
+            <form class="d-flex validation-required" action="/" method="GET" novalidate>
+                <input type="text" class="form-control p-2" name="name" placeholder="Enter friend's name or email..." required>
+                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <svg id="mascot" width="100%" height="100%" viewBox="0 0 1073 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+            <g>
+                <path d="M174.415,178.856c-43.784,-82.919 47.405,-178.856 47.405,-178.856c-0,0 -74.745,33.475 -91.951,114.783c-9.107,43.039 18.348,98.233 18.348,98.233c0,0 -30.034,-27.013 -47.677,-88.271c-15.047,-52.247 -0.309,-101.971 -0.309,-101.971c-0,0 -38.749,49.872 -27.281,116.608c9.273,53.96 53.875,105.573 53.875,105.573c0,-0 -33.943,-15.174 -65.387,-47.373c-38.587,-39.515 -61.438,-72.837 -61.438,-72.837c0,-0 10.005,38.738 29.889,66.127c21.535,29.664 57.284,58.618 57.284,58.618l314.684,-0c-0,-0 -15.381,-6.155 -45.93,-8.464c-21.772,-1.646 -67.899,5.562 -108.594,-4.714c-33.284,-8.404 -61.304,-35.462 -72.918,-57.456Z" style="fill:#000;" />
+                <path d="M897.628,178.856c43.785,-82.919 -47.404,-178.856 -47.404,-178.856c-0,0 74.745,33.475 91.95,114.783c9.107,43.039 -18.348,98.233 -18.348,98.233c0,0 30.035,-27.013 47.677,-88.271c15.047,-52.247 0.31,-101.971 0.31,-101.971c-0,0 38.749,49.872 27.281,116.608c-9.273,53.96 -53.876,105.573 -53.876,105.573c0,-0 33.943,-15.174 65.387,-47.373c38.588,-39.515 61.438,-72.837 61.438,-72.837c0,-0 -10.004,38.738 -29.889,66.127c-21.535,29.664 -57.284,58.618 -57.284,58.618l-314.683,-0c-0,-0 15.38,-6.155 45.929,-8.464c21.773,-1.646 67.899,5.562 108.595,-4.714c33.283,-8.404 61.303,-35.462 72.917,-57.456Z" style="fill:#000;" />
+                <path d="M644.946,191.788c-0,-0 1.222,-16.816 -12.664,-25.267c-8.929,-5.433 -30.38,-4.547 -30.38,-4.547c0,-0 -5.132,-9.55 -12.328,-12.832c-16.409,-7.483 -42.942,-2.094 -64.029,-8.683c-0.647,-0.202 -5.682,4.373 -14.947,1.669c-9.053,-2.643 -10.476,-11.295 -10.476,-11.295c0,-0 -13.587,1.522 -16.007,15.787c-2.694,15.873 8.698,23.292 8.698,23.292c-0,-0 -19.793,22.252 -29.081,41.043c-9.874,19.976 -15.851,38.535 -15.851,38.535l124.622,-0c-0,-0 -8.814,-13.072 -10.591,-24.043c-1.927,-11.887 0.316,-22.263 3.109,-25.474c2.835,-3.26 10.582,-12.9 36.38,-14.433c18.874,-1.122 43.545,6.248 43.545,6.248Zm-63.594,-33.968c-6.512,-2.156 -19.074,-0.816 -19.074,-0.816c0,0 -0.32,3.493 1.298,5.352c3.568,4.101 10.133,3.971 15.451,3.56c3.867,-0.299 9.621,-2.024 9.621,-2.024c-0,0 -1.592,-4.184 -7.296,-6.072Z" style="fill:#000;" />
+            </g>
+        </svg>
+    </div>
+</div>
+<%- include('../partials/flash') %>
+<div id="results">
+    <div class="accordion mb-3 shadow-sm" id="message">
+        <div class="accordion-item border-0">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                <svg width="32" height="32" fill="currentColor"viewBox="0 0 16 16">
+                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
+                  </svg><h3 class="ms-2"><%= message %></h3>
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#message">
+            <div class="accordion-body">
+                <p><%= submessage %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% if(users) { %>
+    <% if(users.length) { %>
+        <p class="border-bottom pb-2"><%=users.length%> contact(s) found.</p>
+    <% for(let i = 0; i < users.length; i++) { %>
+    <div class="entry link">
+        <a href="/profile/<%=users[i]._id%>"></a>
+        <div class="profile-img">
+            <%=users[i].firstName.slice(0, 1)%>
+        </div>
+        <div class="w-100" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <div class="d-flex justify-content-between align-items-center">
+                <p style="font-size: 1.15rem;"><%=users[i].prefName%> <%=users[i].lastName%></p>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-muted" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%=users[i].message ? users[i].message : "No message."%></p>
+            </div>
+        </div>
+    </div>
+    <% }} else { %>
+    <div class="text-center my-5">
+        <p class="text-muted">No results found</p>
+    </div>
+    <% }} else { %>
+    <div class="text-center my-5">
+        <p class="text-muted">Results appear here</p>
+    </div>
+    <% } %>
+</div>
