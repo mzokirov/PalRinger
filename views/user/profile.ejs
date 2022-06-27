@@ -7,7 +7,7 @@
     <h1 class="mb-5">Connect with <%=user.prefName%>!</h1>
     <% } %>
 </div>
-<div class="px-3">
+<div class="px-3 mb-3">
     <div id="input_box" class="p-0 border-0">
         <div id="banner">
         </div>
@@ -17,28 +17,38 @@
                 <button type="button" id="editBtn" class="btn btn-primary" onclick="editProfile();">Edit</button>
             </div>
             <% } %>
-            <div class="d-flex flex-column align-items-center">
+            <div class="">
                 <div class="profile-img-lg" style="margin-top: -4.5rem;">
                     <%=user.firstName.slice(0, 1)%>
                 </div>
-                <div class="text-center">
-                    <h4><%=user.firstName%> <%=user.lastName%></h4>
+                <div class="mb-3">
+                    <div class="d-flex align-items-center">
+                        <h4><%=user.firstName%> <%=user.lastName%></h4>
+                        <span class="badge fw-normal rounded-pill ms-2 <%= user.account.private ? 'bg-danger' : 'bg-primary' %>"><%= user.account.private ? 'private' : 'public'%></span>
+                    </div>
                     <p><%=user.message ? user.message : "no message"%></p>
                     <p class="text-lowercase">joined on <%=user.joinedOn.toDateString().slice(4, 15)%></p>
+                </div>
+                <div class="mb-3">
+                    <% if(user.education.school) { %>
+                    <p>🏫 <%=user.education.school%> <%=user.education.schoolGradYear%></p>
+                    <% } %> 
+                    <% if(user.education.university) { %>
+                    <p>🎓 <%= user.education.uniMajor ? `${user.education.uniMajor} at` : ''%> <%=user.education.university%> <%=user.education.uniGradYear%></p>
+                    <% } %>
+                    <% if(user.occupation) { %> 
+                    <p>💼 <%=user.occupation%></p>
+                    <% } %> 
                 </div>
             </div>
             <div class="d-flex">
                 <div class="sub-card me-3">
                     <p class="text-sm text-muted">dob</p>
-                    <% if(!excluded) { %> 
+                    <% if(!excluded || pals) { %> 
                     <p><%=user.dob ? user.dob.toDateString().slice(4, 15) : "n.d."%></p>
                     <% } else { %>
                         <p>not available</p>
                     <% } %> 
-                </div>
-                <div class="sub-card">
-                    <p class="text-sm text-muted">grade</p>
-                    <p><%=user.gradeLevel ? user.gradeLevel+"th" : "n/a"%></p>
                 </div>
             </div>
             <div class="sub-card">
@@ -47,7 +57,7 @@
             </div>
             <div class="sub-card">
                 <p class="text-sm text-muted">phone</p>
-                <% if(!excluded) { %> 
+                <% if(!excluded || pals) { %> 
                     <p><%=user.phone%></p>
                     <% } else { %>
                         <p>not available</p>
@@ -72,13 +82,13 @@
             </div>
             <div class="sub-card">
                 <p class="text-sm text-muted">nicknames</p>
-                <% if(!excluded) { %> 
+                <% if(!excluded || pals) { %> 
                     <p><%=user.nicknames.length && user.nicknames[0].length > 0 ? user.nicknames.join(", ") : "no nicknames"%></p>
                     <% } else { %>
                         <p>not available</p>
                     <% } %> 
             </div>
-            <% if(!excluded) { %> 
+            <% if(!excluded || pals) { %> 
             <div class="sub-card">
                 <div class="border-bottom d-flex justify-content-between p-2 link">
                     <% if(user.website) { %>
@@ -132,15 +142,25 @@
             <% } %> 
             <% if(user._id.equals(loggedUser._id)) { %> 
                 <div class="mt-3 p-2 rounded border">
-                    <p style="font-style: italic;">list not visible to other users.</p>
+                    <p style="font-style: italic;">list not visible to any user.</p>
                     <div class="sub-card mt-2">
                         <p class="text-sm text-muted">exclusions</p>
                         <p><%=user.exclusions.length && user.exclusions[0].length > 0 ? user.exclusions.join(", ") : "no exclusions"%></p>
                     </div>
                 </div>
             <% } %> 
+            <% if(user._id.equals(loggedUser._id)) { %> 
+                <div class="mt-3 p-2 rounded border">
+                    <p style="font-style: italic;">list not visible to any user.</p>
+                    <div class="sub-card mt-2">
+                        <p class="text-sm text-muted">your pals</p>
+                        <p><%=user.pals.length && user.pals[0].length > 0 ? user.pals.join(", ") : "no pals, yet"%></p>
+                    </div>
+                </div>
+            <% } %> 
         </div>
     </div>
+    <% if(user._id.equals(loggedUser._id)) { %> 
     <div id="input_box" class="p-0 border-0 editForm" style="display: none;">
         <form class="validation-required" action="/profile/<%=user._id%>?_method=PUT" method="POST" novalidate>
             <div id="banner">
@@ -159,26 +179,9 @@
                     <textarea class="form-control" placeholder="my inspirational message..." id="message" name="message"><%=user.message%></textarea>
                     <label for="message">message</label>
                 </div>
-                <div class="container-fluid px-0">
-                    <div class="row g-2 mb-2">
-                        <div class="col">
-                            <div class="form-floating">
-                                <input type="date" class="form-control" id="dob" name="dob" placeholder="name@example.com" value="<%=user.dob ? user.dob.toISOString().substr(0, 10) : ''%>">
-                                <label for="dob">date of birth</label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-floating">
-                                <select class="form-select" id="grade" name="gradeLevel">
-                                    <option value="12" selected>12th</option>
-                                    <option value="11">11th</option>
-                                    <option value="10">10th</option>
-                                    <option value="9">9th</option>
-                                </select>
-                                <label for="grade">grade level</label>
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-floating mb-2">
+                    <input type="date" class="form-control" id="dob" name="dob" placeholder="name@example.com" value="<%=user.dob ? user.dob.toISOString().substr(0, 10) : ''%>">
+                    <label for="dob">date of birth</label>
                 </div>
                 <div class="form-floating mb-2">
                     <input type="text" class="form-control" id="pref-name" name="prefName" placeholder="name@example.com" value="<%=user.prefName%>">
@@ -195,6 +198,33 @@
                 <div class="form-floating mb-4">
                     <input type="text" class="form-control" id="nicknames" name="nicknames" placeholder="enter nicknames separated by a comma..." value="<%=user.nicknames.join(", ")%>">
                     <label for="nicknames">nicknames</label>
+                </div>
+                <div class="mb-3 p-2 border rounded">
+                    <p class="mb-1">education</p>
+                    <div class="form-floating mb-1">
+                        <input type="text" class="form-control" id="school" name="education[school]" placeholder="mbhs" value="<%=user.education.school%>">
+                        <label for="school">school name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="schoolGrad" name="education[schoolGradYear]" placeholder="2022" value="<%=user.education.schoolGradYear%>">
+                        <label for="schoolGrad">school graduation year</label>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input type="text" class="form-control" id="uni" name="education[university]" placeholder="hustler's university" value="<%=user.education.university%>">
+                        <label for="uni">university name</label>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input type="text" class="form-control" id="uniMajor" name="education[uniMajor]" placeholder="gender studies" value="<%=user.education.uniMajor%>">
+                        <label for="uniMajor">uni major</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="uniGrad" name="education[uniGradYear]" placeholder="2026" value="<%=user.education.uniGradYear%>">
+                        <label for="uniGrad">uni graduation year</label>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="occupation" name="occupation" placeholder="janitor" value="<%=user.occupation%>">
+                    <label for="occupation">occupation</label>
                 </div>
                 <div class="form-floating mb-1">
                     <input type="text" class="form-control" id="website" name="website" placeholder="name@example.com" value="<%=user.website%>">
@@ -220,10 +250,26 @@
                             <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z" />
                         </svg> discord</label>
                 </div>
-                <p class="mb-1">Exlude people by their school email from seeing your phone #, date of birth, nicknames and links. Enter only email usernames like <span style="font-style: italic;">jsmith</span>.</p>
-                <div class="form-floating mb-1">
-                    <input type="text" class="form-control" id="exclusions" name="exclusions" placeholder="enter emails separated by a comma..." value="<%=user.exclusions.join(", ")%>">
-                    <label for="exclusions">exclusions (separate by a comma)</label>
+                <div class="mt-3 p-2 rounded border">
+                    <p class="mb-1">Exlude people by their school email from seeing your personal info. Enter only email usernames like <span style="font-style: italic;">jsmith</span>. *List in effect if account is public.</p>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="exclusions" name="exclusions" placeholder="enter emails separated by a comma..." value="<%=user.exclusions.join(", ")%>">
+                        <label for="exclusions">exclusions (separate by a comma)</label>
+                    </div>
+                </div>
+                <div class="mt-3 p-2 rounded border">
+                    <p class="mb-1">Specify people who can see your profile and its info. Enter only email usernames like <span style="font-style: italic;">jsmith</span>. *List in effect if account is private.</p>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="pals" name="pals" placeholder="enter emails separated by a comma..." value="<%=user.pals.join(", ")%>">
+                        <label for="pals">list your pals (separate by a comma)</label>
+                    </div>
+                </div>
+                <div class="mt-3 p-2 rounded border">
+                    <p class="mb-1">Privacy</p>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="privacy" name="privacy" <%= user.account.private ? 'checked' : ''%>>
+                        <label class="form-check-label" for="privacy">Private account?</label>
+                    </div>
                 </div>
                 <div class="mt-3 d-flex justify-content-end">
                     <button type="submit" class="btn btn-success">Save</button>
@@ -232,4 +278,5 @@
             </div>
         </form>
     </div>
+    <% } %> 
 </div>

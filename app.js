@@ -97,26 +97,55 @@ app.get('/', async (req, res) => {
         } else {
             nameArr.push(name);
         }
-        users = await User.find({
-            $or: [{
-                firstName: {
-                    $in: nameArr
-                }
-            }, {
-                lastName: {
-                    $in: nameArr
-                }
-            }, {
-                prefName: {
-                    $in: nameArr
-                }
-            }, {
-                email: {
-                    $in: nameArr
-                }
-            }],
-            'account.approved': true
-        });
+        if(req.session.user) {
+            const user = await User.findById(req.session.user);
+            users = await User.find({
+                $or: [{
+                    firstName: {
+                        $in: nameArr
+                    }
+                }, {
+                    lastName: {
+                        $in: nameArr
+                    }
+                }, {
+                    prefName: {
+                        $in: nameArr
+                    }
+                }, {
+                    email: {
+                        $in: nameArr
+                    }
+                }],
+                'account.approved': true,
+                $or: [
+                    {'account.private': false},
+                    {$and: [{'account.private': true}, {pals: `${user.email.split("@")[0]}`}]}
+                ]
+            });
+        } else {
+            users = await User.find({
+                $or: [{
+                    firstName: {
+                        $in: nameArr
+                    }
+                }, {
+                    lastName: {
+                        $in: nameArr
+                    }
+                }, {
+                    prefName: {
+                        $in: nameArr
+                    }
+                }, {
+                    email: {
+                        $in: nameArr
+                    }
+                }],
+                'account.approved': true,
+                'account.private': false
+            });
+        }
     }
     const message = process.env.MESSAGE;
     const submessage = process.env.SUB_MESSAGE;

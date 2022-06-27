@@ -41,11 +41,33 @@ const userSchema = new Schema({
     dob: {
         type: Date
     },
-    gradeLevel: {
-        type: Number,
-        enum: [9, 10, 11, 12]
-    },
     message: {
+        type: String,
+        trim: true
+    },
+    education: {
+        school: {
+            type: String,
+            trim: true
+        },
+        schoolGradYear: {
+            type: Number,
+            trim: true
+        },
+        university: {
+            type: String,
+            trim: true
+        },
+        uniGradYear: {
+            type: Number,
+            trim: true
+        },
+        uniMajor: {
+            type: String,
+            trim: true
+        }
+    },
+    occupation: {
         type: String,
         trim: true
     },
@@ -80,6 +102,10 @@ const userSchema = new Schema({
         type: String,
         trim: true
     }],
+    pals: [{
+        type: String,
+        trim: true
+    }],
     account: {
         twoFA: {
             type: Boolean,
@@ -92,6 +118,10 @@ const userSchema = new Schema({
         verified: {
             type: Boolean,
             default: false
+        },
+        private: {
+            type: Boolean,
+            default: true
         }
     }
 });

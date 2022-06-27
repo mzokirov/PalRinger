@@ -172,10 +172,12 @@ module.exports.sendVerification = async (req, res) => {
 
 module.exports.login = async (req, res) => {
     const {
-        email
+        email, phone
     } = req.body;
-    const user = await User.findOne({
-        email
+    const user = await User.findOne({ 
+        $or: [
+           {email}, {phone}
+        ]
     });
     if (!user.account.approved) {
         req.flash("info", "You account is awaiting approval.");
@@ -199,15 +201,19 @@ module.exports.renderProfile = async (req, res) => {
     const user = await User.findById(userid);
     const loggedUser = await User.findById(req.session.user);
     let excluded = true;
+    let pals = false
     if(!user.exclusions.includes(loggedUser.email.split("@")[0])) {
         excluded = false;
+    }
+    if(user.pals.includes(loggedUser.email.split("@")[0])) {
+        pals = true;
     }
     if (!user) {
         req.flash("error", "User not found. Please try again.");
         return res.redirect('/login');
     }
     res.render('user/profile', {
-        user, excluded
+        user, excluded, pals
     });
 }
 
@@ -216,9 +222,18 @@ module.exports.editProfile = async (req, res) => {
     let formData = req.body;
     const nicknames = req.body.nicknames.split(",");
     const rawExclusions = req.body.exclusions.split(",");
+    const rawPals = req.body.pals.split(",");
     let exclusions = [];
+    let isPrivate = true;
+    if(req.body.privacy != "on") {
+        isPrivate = false;
+    }
+    let pals = [];
     for(let i = 0; i<rawExclusions.length; i++) {
         exclusions.push(rawExclusions[i].trim().split("@")[0]);
+    }
+    for(let i = 0; i<rawPals.length; i++) {
+        pals.push(rawPals[i].trim().split("@")[0]);
     }
     if (formData.email != user.email) {
         formData.account = {
@@ -235,7 +250,8 @@ module.exports.editProfile = async (req, res) => {
     await User.findByIdAndUpdate(req.session.user, {
         message: req.body.message,
         dob: req.body.dob,
-        gradeLevel: req.body.gradeLevel,
+        education: req.body.education,
+        occupation: req.body.occupation,
         prefName: req.body.prefName,
         phone: req.body.phone,
         email: req.body.email,
@@ -244,7 +260,9 @@ module.exports.editProfile = async (req, res) => {
         instagram: req.body.instagram,
         snapchat: req.body.snapchat,
         discord: req.body.discord,
-        exclusions
+        exclusions,
+        pals,
+        'account.private': isPrivate
     });
     req.flash("success", "Profile updated!");
     res.redirect(`/profile/${req.session.user}`);
